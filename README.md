@@ -1,4 +1,4 @@
-# MobiniTemplate
+# Mobini Scaffold
 
 This gem is based on the Beautiful scaffold gem (https://github.com/rivsc/Beautiful-Scaffold)
 And add extra functions to easly create bootstraped scaffold and nested models
