@@ -9,7 +9,7 @@ And add extra functions to easly create bootstraped scaffold and nested models
 This gem is not yet released on https://rubygems.org/
 so eather add by git or put it in your vendor director
 
-gem 'mobini_template', path => 'vendor/mobini_template'
+gem 'mobini_scaffold', path => 'vendor/mobini_scaffold'
 
 ```
 

@@ -1,4 +1,4 @@
-module TemplateCommonHelpers
+module ScaffoldCommonHelpers
   require 'erb'
   private
   def copy_file_unless_exists template, destination

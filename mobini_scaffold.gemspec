@@ -1,11 +1,11 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'mobini_template/version'
+require 'mobini_scaffold/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "mobini_template"
-  spec.version       = MobiniTemplate::VERSION
+  spec.name          = "mobini_scaffold"
+  spec.version       = MobiniScaffold::VERSION
   spec.authors       = ["Fazel Mobini Kesheh"]
   spec.email         = ["fazelmk@gamil.com"]
   spec.summary       = "scaffold plus"

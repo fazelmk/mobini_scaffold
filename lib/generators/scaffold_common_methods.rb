@@ -1,4 +1,4 @@
-module TemplateCommonMethods
+module ScaffoldCommonMethods
   require 'erb'
   private
   #############
@@ -64,7 +64,7 @@ module TemplateCommonMethods
 
   def replace_shared?
     return options[:replace_shared].blank? ? false : true
-  end  
+  end
 
   def without_locales?
     return options[:without_locales].blank? ? false : true

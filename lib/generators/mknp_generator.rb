@@ -1,10 +1,10 @@
 # encoding : utf-8
 class MknpGenerator < Rails::Generators::Base
   #New Parent
-  require 'generators/template_common_methods'
-  require 'generators/template_common_helpers'
-  include TemplateCommonMethods
-  include TemplateCommonHelpers
+  require 'generators/scaffold_common_methods'
+  require 'generators/scaffold_common_helpers'
+  include ScaffoldCommonMethods
+  include ScaffoldCommonHelpers
   include Rails::Generators::Migration
 
   # Resources
