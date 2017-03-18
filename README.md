@@ -138,6 +138,42 @@ gem 'mobini_scaffold', path => 'vendor/mobini_scaffold'
   rails g mknp tested/child tested/nested_child
 ```
 
+## Script to generate tests
+```
+rails g mks test name:string kind:integer visible:boolean date_time:datetime --namespace=Tested --replace_shared
+rails g mks child name:string tested/test:references --namespace=Tested --admin_only
+rails g mks grand_child name:string --namespace=Tested
+rails g mks grand_grand_child name:string --namespace=Tested
+rails g mkm AddChildToGrandChild tested/child:references --namespace=Tested
+rails g mknf nested_child tested/test name:string date_time:datetime --namespace=Tested
+rails g mkm AddObsToNestedChild obs:text --namespace=Tested
+rails g mks test_field str:string txt:text order:integer checkbox:boolean valor:price telefone:phone date:date date_time:datetime time:time 'enumerate:enum{enum:["opc1";"opc2";"opc3";"a"]}' --namespace=Tested
+rails g mknp tested/child tested/nested_child
+rails g mknem tested/grand_child tested/grand_grand_child
+rails g mks model_one name:string --namespace=Tested
+rails g mks model_two name:string 'same_model:references{class_name:tested/model_two}' --namespace=Tested
+rails g mknjt model_one_join_model_two tested/model_one tested/model_two order:string --namespace=Tested
+rails g mks equipment name:string --namespace=Tested --replace_shared
+```
+
+## Script to remove the tests
+```
+rails d mks test name:string kind:integer visible:boolean date_time:datetime --namespace=Tested
+rails d mks child name:string tested/test:references --namespace=Tested --admin_only
+rails d mks grand_child name:string --namespace=Tested
+rails d mks grand_grand_child name:string --namespace=Tested
+rails d mkm AddChildToGrandChild tested/child:references --namespace=Tested
+rails d mknf nested_child tested/test name:string date_time:datetime --namespace=Tested
+rails d mkm AddObsToNestedChild obs:text --namespace=Tested
+rails d mks test_field str:string txt:text order:integer checkbox:boolean valor:price telefone:phone date:date date_time:datetime time:time 'enumerate:enum{enum:["opc1";"opc2";"opc3";"a"]}' --namespace=Tested
+rails d mknp tested/child tested/nested_child
+rails d mknem tested/grand_child tested/grand_grand_child
+rails d mks model_one name:string --namespace=Tested
+rails d mks model_two name:string 'same_model:references{class_name:tested/model_two}' --namespace=Tested
+rails d mknjt model_one_join_model_two tested/model_one tested/model_two order:string --namespace=Tested
+rails d mks equipment name:string --namespace=Tested --replace_shared
+```
+
 ## TODO
  - Remove replace_shared Options and add rake task to do it
  - Document the custom types
