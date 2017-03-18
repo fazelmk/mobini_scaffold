@@ -36,6 +36,7 @@ gem 'mobini_template', path => 'vendor/mobini_template'
   - time => uses time_mask class
   - phone => uses phone_mask class
   - enum => create new enum 'enumName:enum{enum:["opc1";"opc2";"opc3";"opc4"]}' OR use existing enum 'enumName:enum'
+  - custom reference (Ex.: 'my_model_tag:references{class_name:namespace/model}')
 
 ## Usage
 
