@@ -1,0 +1,5 @@
+<%%= render 'show_fields.html.erb', item: @<%= singular_table_name %> %>
+<!-- DON'T REMOVE - USED TO ADD NESTED MODELS -->
+
+<%%= glink_to 'pencil', t('views.<%= singular_table_name %>.edit', default: t('general.edit')), edit_<%= singular_table_name %>_path(@<%= singular_table_name %>) if @user_ability.can? :update, @<%= singular_table_name %> %>
+<%%= glink_to 'arrow-left', t('views.<%= singular_table_name %>.back', default: t('general.back')), <%= index_route %>_path %>

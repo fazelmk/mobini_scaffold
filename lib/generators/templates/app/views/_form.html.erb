@@ -1,0 +1,15 @@
+<%%= form_for(@<%= singular_table_name %>, :url => {action: action}) do |f| %>
+
+<%%= render "shared/error_messages.html.erb", :target => @<%= singular_table_name %> %>
+<%%= render 'form_fields.html.erb', f: f%>
+<!-- DON'T REMOVE - USED TO ADD NESTED MODELS -->
+  <br />
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="actions">
+        <%%= f.button ("<span class='glyphicon glyphicon-floppy-disk'></span> "+t('views.<%= singular_table_name %>.save', default: t('general.save'))).html_safe,:class => "btn btn-primary", :type => 'submit', data: { disable_with: "#{t('general.disabled_submit_text')}" } %>
+        <%%= glink_to 'arrow-left', t('views.<%= singular_table_name %>.back', default: t('general.back')), <%= index_route %>_path, class: "btn btn-default" %>
+      </div>
+    </div>
+  </div>
+<%% end %>

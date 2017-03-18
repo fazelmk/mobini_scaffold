@@ -1,0 +1,5 @@
+<%- attributes.each do |attribute| -%>
+<%- if !attribute.password_digest? && attribute.type != :file && attribute.type != :image -%>
+    <strong><%= att_name(attribute.column_name) %>:</strong> <%%= t("activerecord.attributes.<%= singular_table_name %>.<%=att_name(attribute.column_name)%>_import") %><br />
+<%- end -%>
+<%- end -%>

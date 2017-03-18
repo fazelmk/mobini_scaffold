@@ -1,0 +1,131 @@
+<%% parent_model ||= "" %>
+<%- attributes.each do |attribute| -%>
+<%- if attribute.password_digest? -%>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="field">
+        <%%= f.label :password %><br>
+        <%%= f.password_field :password %>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="field">
+        <%%= f.label :password_confirmation %><br>
+        <%%= f.password_field :password_confirmation, class: "form-control" %>
+      </div>
+    </div>
+  </div>
+<%- elsif attribute.type == :file || attribute.type == :image -%>
+  <%- @model_attrib = "@#{singular_table_name}.#{attribute.name}" -%>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="field">
+        <%%= f.label :<%= attribute.name %> %><br>
+
+        <%% if <%= @model_attrib %>.exists? %>
+          <% if attribute.type == :image %>
+            <%%=link_to(image_tag(<%= @model_attrib %>.url(:small)), <%= @model_attrib %>.url, class: "img-responsive") %>
+          <% else %>
+            <%%= link_to "<span class='glyphicon glyphicon-paperclip' aria-hidden='true'></span>#{<%= @model_item %>.<%= attribute.name %>_file_name}".html_safe , <%= @model_attrib %>.url %>
+          <% end %>
+        <%% end %>
+        <%%= f.file_field :<%= attribute.name %> %>
+
+      </div>
+    </div>
+  </div>
+<%- elsif attribute.type == :price -%>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="field">
+        <%%= f.label :<%= attribute.name %> %><br>
+        <div class="input-group">
+          <div class="input-group-addon"><%%= t('number.currency.format.unit') %></div>
+          <%%= f.text_field :<%= attribute.name %>, data: { role: 'money', a_sep: t('number.currency.format.delimiter'), a_dec: t('number.currency.format.separator') }, class: "form-control"%>
+        </div>
+      </div>
+    </div>
+  </div>
+<%- elsif attribute.type == :wday -%>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="field">
+        <%%= f.label :<%= attribute.name %> %><br>
+        <%%= f.select :<%= att_name(attribute.column_name) %> , options_for_select(I18n.t('date.day_names').each_with_index.map { |x,i| [x, i] } ), {},{class: "form-control"} %>
+      </div>
+    </div>
+  </div>
+<%- elsif attribute.reference?-%>
+<%% if class_to_att(parent_model.to_s) != "<%= att_name(attribute.name) %>" %>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="field">
+        <%%= f.label :<%= att_name(attribute.name) %> %><br>
+        <%%= f.collection_select :<%= att_name(attribute.column_name) %> , <%= attr_class_for_form(attribute.name,attribute).constantize %>.sorted, :id, :caption_tag, {}, {class: "form-control"} %>
+      </div>
+    </div>
+  </div>
+<%% end %>
+<%- elsif attribute.type == :boolean -%>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="field">
+        <label>&nbsp</label>
+        <div class="input-group">
+          <span class="input-group-addon">
+            <%%= f.check_box :<%= attribute.name %> %>
+          </span>
+          <%%= f.label :<%= attribute.name %>, class: "form-control" %>
+        </div><!-- /input-group -->
+      </div>
+    </div>
+  </div>
+<%- elsif attribute.type == :date -%>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="field">
+        <%%= f.label :<%= attribute.name %> %><br>
+         <%%= f.text_field :<%= attribute.name %> , value: (f.object.<%= attribute.name %>.blank? ? "" : f.object.<%= attribute.name %>.strftime("%d/%m/%Y")), class: "form-control <%=attribute.type.to_s%>_mask datepicker" %>
+      </div>
+    </div>
+  </div>
+<%- elsif attribute.type == :datetime -%>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="field">
+        <%%= f.label :<%= attribute.name %> %><br>
+         <%%= f.text_field :<%= attribute.name %>, value: (f.object.<%= attribute.name %>.blank? ? "" : f.object.<%= attribute.name %>.strftime("%d/%m/%Y %H:%M")), class: "form-control <%=attribute.type.to_s%>_mask" %>
+      </div>
+    </div>
+  </div>
+<%- elsif attribute.type.in? [:time,:phone] -%>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="field">
+        <%%= f.label :<%= attribute.name %> %><br>
+         <%%= f.text_field :<%= attribute.name %>, class: "form-control <%=attribute.type.to_s%>_mask" %>
+      </div>
+    </div>
+  </div>
+<%- elsif attribute.type == :enum -%>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="field">
+        <%%= f.label :<%= attribute.name %> %><br>
+         <%%= f.select :<%= attribute.name %>, options_for_select(Enum::<%= attribute.name.upcase %>.map { |k,v| [I18n.t("enums.<%= attribute.name.upcase %>.#{v}"), k] }, f.object.<%= attribute.name %> ), {},{class: "form-control"} %>
+      </div>
+    </div>
+  </div>
+<%- else -%>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="field">
+        <%%= f.label :<%= attribute.name %> %><br>
+        <%%= f.<%= attribute.field_type %> :<%= attribute.name %> , class: "form-control <%=attribute.type.to_s%>_mask" %>
+      </div>
+    </div>
+  </div>
+<%- end -%>
+<%- end -%>

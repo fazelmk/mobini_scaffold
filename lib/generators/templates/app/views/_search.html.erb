@@ -1,0 +1,75 @@
+<div class="modal fade" id="modal-search" tabindex="-1" role="dialog" aria-labelledby="myModalSearch" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel"><%%= t(:search_and_filter) %></h4>
+      </div>
+      <div class="modal-body">
+        <%%= search_form_for @search, :url => search_<%=plural_table_name%>_path, :html => { :class => "row well well-small search-and-filter" }, :method => :post do |f| %>
+          <h3><%%= t(:search_and_filter) %></h3>
+          <%% visible_fields.map do |vf| %>
+            <%%= ransack_field("<%= model_wthout_namespace %>",vf.field, f, "<%= namespace_alone %>") %>
+          <%% end %>
+        <%% end %>
+      </div>
+      <div class="modal-footer">
+          <button type="button" class="btn btn-primary" id="search_and_filter"> <%%= t("general.search_button") %> </button>
+          <%%= link_to  t("remove_filter"), <%= index_route %>_path(:nosearch => "ok"), :class => "btn btn-danger" %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  $("#search_and_filter").on('click', function(){
+    search();
+  });
+
+  function search() {
+    return_json = {};
+    $.each($('.search_input'), function() {
+      var id = $(this).attr("id");
+      var value = $(this).val();
+
+      if(id.indexOf("_cents") > -1){
+        value = value.replace(/<%%=t(:currency_replace)%>/g, '')
+        value = value.replace(/\./g, '')
+        value = value.replace(/\,/g, '')
+        value = value.replace(/ /g, '')
+        value = value.replace(/_/g, '')
+      }
+
+      if(value != "" && value !== null){
+        value = value.replace(/:/g, '**')
+        return_json[id] = value;
+      }
+    });
+
+    $.each($('.search_input_combobox'), function() {
+      var id = $(this).attr("id");
+      var e = document.getElementById(id);
+      var value = e.options[e.selectedIndex].value;
+      if(value != "")
+        return_json[id] = value;
+    });
+
+    var url = "<%%= root_url %><%= plural_model_url %>";
+    var search_str = JSON.stringify(return_json);
+    search_str = search_str.replace(/:/g, '=>');
+    search_str = search_str.replace(/{/g, '[');
+    search_str = search_str.replace(/}/g, ']');
+    search_str = search_str.replace(/\*\*/g, ':');
+    search_str = search_str.replace(/q_/g, '');
+    window.location = url+'?q='+search_str;
+  }
+
+  document.addEventListener("keydown", keyDownTextField, false);
+
+  function keyDownTextField(e) {
+
+    if(($("#modal-search").data('bs.modal') || {isShown: false}).isShown && e.keyCode==13) {
+      search();
+    }
+  }
+</script>

@@ -1,0 +1,35 @@
+<%% parent_model ||= "" %>
+<% attributes.reject(&:password_digest?).each do |attribute| -%>
+<%% unless item.<%= att_name(attribute.name) %>.blank? || class_to_att(parent_model.to_s) == "<%= att_name(attribute.name) %>" %>
+<div class="show_div row">
+  <div class="col-xs-12">
+    <div class="field">
+      <strong><%%= t("activerecord.attributes.<%= singular_table_name %>.<%= attribute.name %>", default: "<%= attribute.human_name %>") %>:</strong>
+<%- if attribute.type == :image -%>
+      <%%=link_to(image_tag(item.<%= attribute.name %>.url(:small)), item.<%= attribute.name %>.url, class: "img-responsive") %>
+<%- elsif attribute.type == :file -%>
+      <%%= link_to "<span class='glyphicon glyphicon-paperclip' aria-hidden='true'></span> #{item.<%= attribute.name %>_file_name}".html_safe , item.<%= attribute.name %>.url %>
+<%- elsif attribute.type == :price -%>
+      <%%= humanized_money_with_symbol item.<%= attribute.name %> %>
+<%- elsif attribute.type == :wday -%>
+      <%%= I18n.t('date.day_names')[item.<%= attribute.name %>] %>
+<%- elsif attribute.type == :enum -%>
+      <%%= item.<%= attribute.name %>_desc %>
+<%- elsif attribute.type == :boolean -%>
+      <%%= t(item.<%= attribute.name %>.to_s, default: t('false')) %>
+<%- elsif attribute.reference?-%>
+      <%% unless item.<%= att_name(attribute.name) %>.blank? %>
+        <%%= item.<%= att_name(attribute.name) %>.caption_tag %>
+      <%% else %>
+        <%%= t("general.not_informed") %>
+      <%% end %>
+<%- elsif attribute.type.in? [:date, :datetime] -%>
+    <%%= l(item.<%= attribute.name %>, :format => :short) %>
+<%- else -%>
+      <%%= item.<%= attribute.name %> %>
+<%- end -%>
+    </div>
+  </div>
+</div>
+<%% end %>
+<%- end -%>

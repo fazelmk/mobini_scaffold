@@ -1,0 +1,57 @@
+# encoding: UTF-8
+pt-BR:
+  <%= singular_table_name %>:
+    menu: "<%=singular_table_name.humanize.titleize %>"
+    import_title: "<%=singular_table_name.humanize.titleize %>"
+
+  activerecord:
+    models:
+      <%= singular_table_name %>:
+        one: "<%=singular_table_name.humanize.titleize %>"
+        other: "<%=plural_table_name.humanize.titleize %>"
+
+    attributes:
+      <%= singular_table_name %>: <%= "&translated_attributes" unless namespace_alone.blank? %>
+        id:
+        id_import:
+<% attributes.each do |attribute| -%>
+        <%= attribute.name %>:
+        <%= attribute.name %>_import:
+<% end -%>
+######## DON'T REMOVE - ADD Fields To Translate ###############
+
+<% unless namespace_alone.blank? -%>
+      <%= model_url %>:
+        <<: *translated_attributes
+<% end -%>
+
+    errors:
+      models:
+        <%= singular_table_name %>:
+          attributes:
+<%- attributes.each do |attribute| -%>
+            <%= attribute.name %>:
+              #blank:
+              #taken:
+              #too_short:
+              #confirmation:
+              #invalid:
+<% end -%>
+
+  views:
+    <%= singular_table_name %>:
+      title_index:
+      title_new:
+      title_edit:
+      link_to:
+      back:
+      new:
+      edit:
+      show:
+      destroy:
+
+      notice:
+        creted:
+        updated:
+        deleted:
+        imported:

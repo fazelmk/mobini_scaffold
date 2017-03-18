@@ -1,0 +1,84 @@
+<h1 style="text-align: center;"><%%= t("views.<%= singular_table_name %>.title_index") %></h1>
+<%% visible_fields =  VisibleField.where(user_id: current_user,model: "<%= singular_table_name %>").order("position asc") %>
+
+<%%= render :partial => "shared/modal_columns", :locals => { :model_name => "<%= singular_table_name %>", :model_columns => visible_fields.map{|f| f.field}+(<%= model_class %>.attributes_allowed_in_index.select {|f| !f.in? visible_fields.map{|f| f.field}} ), redirect_url: "<%= route_url %>"} %>
+
+<%%= render :partial => "search", :locals => { :visible_fields => visible_fields} %>
+
+<a class="" data-toggle="modal" href="#modal-search" title="<%%= t(:search_and_filter) %>" >
+  <span aria-hidden="true">search</span>
+</a>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><a class="" data-toggle="modal" href="#modal-columns" title="<%%= t('general.select_columns') %>" >
+        <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+      </a></th>
+<%% visible_fields.select{|f| f.field != "id"}.map do |vf| %>
+      <th class="<%%= "col-#{vf.field} "+ align_attribute(<%=model_class%>.attr_type(vf.field)) %>">
+        <%%= sorting_header("<%= model_file %>", vf.field, <%=model_class%>.attr_type(vf.field), "<%= namespace_alone %>") %>
+      </th>
+<%% end %>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+<%% @<%= plural_table_name %>.each do |<%= singular_table_name %>| %>
+    <%% next unless @user_ability.can? :show, <%= singular_table_name %> %>
+      <tr>
+        <td style="<%%= 'display: none' if visible_column("<%= singular_table_name %>", "id") %>" class="col-not_id"></td>
+        <td style="<%%= 'display: none' if !visible_column("<%= singular_table_name %>", "id") %>" class="col-id"><%%= <%=singular_table_name%>.id %></td>
+<%% visible_fields.select{|f| f.field != "id"}.map do |vf| %>
+      <td class="<%%= "col-#{vf.field} "+ align_attribute(<%=model_class%>.attr_type(vf.field)) %>">
+        <%% type = <%= model_class %>.attr_type(vf.field) || <%= model_class %>.attr_type(vf.field[0..-4]) %>
+        <%% if type == 'price' %>
+          <%% value = <%= singular_table_name %>[vf.field+"_cents"].to_i/100.0 %>
+        <%% else %>
+          <%% value = <%= singular_table_name %>[vf.field] %>
+        <%% end %>
+        <%%= show_value(value, type, vf.field, "<%= model_class %>") %>
+      </td>
+<%% end %>
+        <td>
+          <div class="pull-right">
+            <div class="btn-group">
+              <%%= glink_to 'eye-open', '', <%= singular_table_name %>%>
+              <%%= glink_to 'pencil', '', edit_<%= singular_table_name %>_path(<%= singular_table_name %>) if @user_ability.can? :update, <%=singular_table_name%> %>
+              <%%= glink_to 'trash', '', <%= singular_table_name %>,  method: :delete, data: { confirm: t("views.<%= singular_table_name%>.confirm_destroy", default: t('general.confirm_destroy')) } if @user_ability.can? :destroy, <%=singular_table_name%>  %>
+            </div>
+          </div>
+        </td>
+      </tr>
+<%% end %>
+  </tbody>
+</table>
+
+<br />
+<div class="digg_pagination">
+  <%%= will_paginate @<%= plural_table_name %>  %>
+</div>
+<br />
+
+
+<div class="row">
+  <div class="col-xs-12">
+    <%%= glink_to 'plus', t("views.<%= singular_table_name %>.new", default: t('general.new')), new_<%= singular_table_name %>_path if @user_ability.can? :create,<%= model_class %> %>
+    <%% if ((<%= model_class %>::EXPORT && @user_ability.can?(:export,<%= model_class %>)) || (<%= model_class %>::IMPORT && @user_ability.can?(:import,<%= model_class %>)))%>
+      <div class="pull-right">
+        <div class="btn-group">
+          <%% if <%= model_class %>::EXPORT && @user_ability.can?(:export, <%= model_class %>) %>
+            <%%= glink_to 'download', 'CSV', <%= index_route %>_path(:format => :csv) %>
+            <%%= glink_to 'download', 'PDF', <%= index_route %>_path(:format => :pdf) %>
+          <%% end %>
+          <%% if <%= model_class %>::IMPORT && @user_ability.can?(:import,<%= model_class %>) %>
+            <%%= link_to "Import", import_<%= index_route %>_path, :class => "btn btn-default" %>
+          <%% end %>
+        </div>
+      </div>
+    <%% end %>
+  </div>
+</div>
+
+

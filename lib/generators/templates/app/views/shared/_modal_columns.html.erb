@@ -1,0 +1,67 @@
+<div class="modal fade" id="modal-columns" tabindex="-1" role="dialog" aria-labelledby="myModalConlumns" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel"><%= t('general.select_columns') %></h4>      
+      </div>
+      <div class="modal-body">
+        <% if "id".in? model_columns %>
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="input-group">
+                <span class="input-group-addon">
+                  <input type="checkbox" name="field[]" value="id" <%= "checked" if current_user.visible_fields.select {|f| f.model=="#{model_name}" && f.field=="id"}.size == 1 %> />
+                </span>
+                <%= label_tag :label, t("activerecord.attributes.#{model_name}.id", default: t("general.id")), class: "form-control" %>
+              </div><!-- /input-group -->
+            </div><!-- /.col -->
+          </div><!-- /.row -->
+          <br />
+        <% end %>
+        <div id="visible_fields">
+          <% for field in model_columns-["id"] %>
+            <div class="row">
+              <div class="col-xs-12">
+                <div class="input-group">
+                  <span class="input-group-addon">
+                    <input type="checkbox" name="field[]" value="<%= field %>" <%= "checked" if current_user.visible_fields.select {|f| f.model=="#{model_name}" && f.field=="#{field}"}.size == 1 %> />
+                  </span>
+                  <%= label_tag :label, t("activerecord.attributes.#{model_name}.#{field}", default: t("general.#{field}")), class: "form-control" %>
+                </div><!-- /input-group -->
+              </div><!-- /.col-lg-6 -->
+            </div><!-- /.row -->
+          <% end %>
+        </div>
+      </div>
+      <div class="modal-footer">
+          <button type="button" class="btn btn-primary" id="filter-columns"> Ok </button>
+          <button type="button" class="btn btn-default" data-dismiss="modal"><%= t('general.close') %></button>
+        </div>
+    </div>
+  </div>
+</div>
+
+
+<script type="text/javascript">
+  $("#filter-columns").on('click', function(){
+    filter();
+  });
+
+
+
+  function filter() {
+      var return_json = [];
+      $.each($('input[name^="field"]:checked'), function(index, value) {
+          return_json.push($(value).val());
+      });
+      var url = "<%= root_url %>mobini_scaffold/<%=model_name.underscore%>";
+      $.get(url,{ 'fields' : return_json, redirect_to: "<%= redirect_url %>" });
+  }
+
+  jQuery(function() {
+    return $('#visible_fields').sortable({
+      axis: 'y',
+    });
+  });
+</script>

@@ -1,0 +1,12 @@
+<div class="nested_fields">
+  <div class="row"><div class="nested_title col-xs-12"><%%= t("<%=singular_table_name%>.menu") %></div></div>
+  <div style="margin-right: 30px;">
+<%- @nested_show = true -%>
+<%% parent.<%= plural_table_name %>.each do |child| %>
+<div class='fields'>
+<%%= render '<%= plural_model_url %>/show_fields.html.erb', item: child, parent_model: parent.class %>
+<!-- DON'T REMOVE - USED TO ADD NESTED MODELS -->
+</div>
+<%% end %>
+  </div>
+</div>

@@ -1,0 +1,32 @@
+<%- if @nested == true -%>
+<hr />
+<%- end -%>
+<div class="import_fields">
+  <h4><%%= t("<%=singular_table_name%>.import_title") %></h4><BR />
+  <strong>id:</strong> <%%= t("activerecord.attributes.<%=singular_table_name%>.id_import") %><br />
+<%% parent_model_class ||= nil %>
+<%% if parent_model_class.blank? %>
+  <%%= render "<%= (@nested == true ? "#{plural_model_url}/" : '') %>import_fields.html.erb" %>
+<%% else %>
+  <%%= render "<%= (@nested == true ? "#{plural_model_url}/" : '') %>import_fields.html.erb", parent_model_class: parent_model_class %>
+<%% end %>
+</div>
+<BR />
+<div>
+  <%%= form_tag import_path, multipart: true do %>
+    <%%= hidden_field_tag :class_name, "<%= model_class %>", required: true %>
+<%- if @nested == true -%>
+    <%%= hidden_field_tag :parent_class_name, parent_model_class, required: true %>
+<%- end -%>
+    <div class="row">
+      <div class="col-xs-3 btn-import"><%%= file_field_tag :file, required: true %></div>
+      <div class="col-xs-1"><%%= submit_tag "Import", :class => "btn btn-default" %></div>
+    </div>
+  <%% end %>
+</div>
+<!-- DON'T REMOVE - USED TO ADD NESTED IMPORT -->
+<%- if @nested == false -%>
+<hr />
+<br />
+<%%= link_to t("activerecord.models.<%= singular_table_name %>.back", default: t('general.back')), <%= index_route %>_path , class: "btn btn-default" %>
+<%- end -%>

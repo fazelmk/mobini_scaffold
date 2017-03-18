@@ -1,0 +1,9 @@
+<div class="nested_fields">
+  <div class="row"><div class="nested_title col-xs-12"><%%= t("<%=singular_table_name%>.menu") %></div></div>
+<%%= parent_form.fields_for :<%= plural_table_name %> do |f| %>
+  <%%= f.link_to_remove ("#{t('general.remove_child')} <span class='glyphicon glyphicon-trash'></span>").html_safe, class: 'trash' %>
+  <%%= render '<%= plural_model_url %>/form_fields.html.erb', f: f, parent_model: parent_form.object.class %>
+<!-- DON'T REMOVE - USED TO ADD NESTED MODELS -->
+<%% end %>
+<%%= parent_form.link_to_add ("<span class='glyphicon glyphicon-plus'></span> #{t('general.add_child')}").html_safe, :<%= plural_table_name %> %>
+</div>
